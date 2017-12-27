@@ -1,4 +1,4 @@
-#include "wdt.h"
+#include "watchdog.h"
 
 #include <sam.h>
 
