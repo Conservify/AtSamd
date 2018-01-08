@@ -83,7 +83,7 @@ uint16_t wdt_get_period_length_in_ms(uint8_t period) {
     }
 }
 
-uint16_t wdt_enable(uint8_t period) {
+uint16_t wdt_enable(uint8_t period, bool alwaysOn) {
     wdt_initialize();
 
     // First disable the watchdog so its registers can be changed.
@@ -102,7 +102,11 @@ uint16_t wdt_enable(uint8_t period) {
     WDT->EWCTRL.reg = WDT_EWCTRL_EWOFFSET(period);
 
     // Enable the WDT module
-    WDT->CTRL.reg |= WDT_CTRL_ENABLE;
+    if (alwaysOn) {
+        WDT->CTRL.reg |= WDT_CTRL_ALWAYSON;
+    } else {
+        WDT->CTRL.reg |= WDT_CTRL_ENABLE;
+    }
     wdt_sync();
 
     // Enable early warning interrupt
