@@ -6,6 +6,12 @@
 
 volatile bool wdt_early_warning_triggered = false;
 
+volatile wdt_hook_fn_t wdt_hook = nullptr;
+
+void wdt_configure_hook(wdt_hook_fn_t hook) {
+    wdt_hook = hook;
+}
+
 void wdt_clear_early_warning(void) {
 	WDT->INTFLAG.reg = WDT_INTFLAG_EW;
     wdt_early_warning_triggered = false;
@@ -143,4 +149,7 @@ bool wdt_read_early_warning() {
 void WDT_Handler(void) {
     wdt_early_warning_triggered = true;
     WDT->INTFLAG.reg = WDT_INTFLAG_EW;
+    if (wdt_hook != nullptr) {
+        wdt_hook();
+    }
 }

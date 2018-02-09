@@ -22,6 +22,10 @@ bool wdt_is_early_warning(void);
 
 void wdt_sync();
 
+typedef void (*wdt_hook_fn_t)(void);
+
+void wdt_configure_hook(wdt_hook_fn_t hook);
+
 uint16_t wdt_enable(uint8_t period, bool alwaysOn = false);
 
 uint16_t wdt_get_period_length_in_ms(uint8_t period);
